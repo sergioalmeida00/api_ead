@@ -4,10 +4,11 @@ namespace App\Repositories;
 
 use App\Models\Support;
 use App\Models\User;
+use App\Repositories\Traits\RepositoryTraits;
 
 class SupportsRepository
 {
-
+    use RepositoryTraits;
     protected $entity;
 
     public function __construct(Support $model)
@@ -34,6 +35,7 @@ class SupportsRepository
                     $query->where('description', 'ILIKE', "%{$filter}%");
                 }
             })
+            ->orderBy('updated_at')
             ->get();
     }
     public function createNewSupport($data)
@@ -63,10 +65,5 @@ class SupportsRepository
     private function getSupport($supportId)
     {
         return $this->entity->findOrFail($supportId);
-    }
-
-    private function getUserAuth()
-    {
-        return User::first();
     }
 }

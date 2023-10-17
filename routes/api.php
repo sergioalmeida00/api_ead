@@ -4,6 +4,7 @@ use App\Http\Controllers\Api\{
     CourseController,
     LessonController,
     ModuleController,
+    ReplySupportController,
     SupportController,
 };
 use Illuminate\Http\Request;
@@ -20,7 +21,7 @@ Route::get('/lessons/{id}', [LessonController::class, 'show']);
 Route::get('/supports', [SupportController::class, 'index']);
 Route::post('/supports', [SupportController::class, 'store']);
 
-Route::post('/supports/{id}/replies', [SupportController::class, 'createReply']);
+Route::post('/replies', [ReplySupportController::class, 'createReply']);
 
 
 // Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
