@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
@@ -29,5 +30,12 @@ class SupportController extends Controller
             ->createNewSupport($request->validated());
 
         return new SupportResource($support);
+    }
+
+    public function mySupports(Request $request)
+    {
+        $mySupports = $this->repository->getMySupports($request->all());
+
+        return SupportResource::collection($mySupports);
     }
 }
