@@ -15,6 +15,17 @@ class Lesson extends Model
 
     protected $fillable = ['name', 'description', 'video'];
 
+
+    public function views()
+    {
+        return $this->hasMany(View::class)
+            ->where(function ($query) {
+                if (auth()->check()) {
+                    return $query->where('user_id', auth()->user()->id);
+                }
+            });
+    }
+
     public function supports()
     {
         return $this->hasMany(Support::class);
