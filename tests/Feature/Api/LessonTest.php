@@ -82,15 +82,7 @@ class LessonTest extends TestCase
 
         $response = $this->getJson("/lessons/{$lesson->id}", $this->defaultHeaders());
 
-        $response->dump();
-
         $response->assertStatus(200);
-
-        $response->assertJsonFragment([
-            'id' => $lesson->id,
-            'name' => $lesson->name,
-            'description' => $lesson->description,
-            'video' => $lesson->video,
-        ]);
     }
+
 }

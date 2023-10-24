@@ -34,6 +34,6 @@ class LessonController extends Controller
     public function viewed(StoreViewed $request)
     {
         $this->repository->markLessonViewed($request->lesson_id);
-        return $this->success([], 'Aula Assistida');
+        return $this->success([], 'Aula Assistida',201);
     }
 }
