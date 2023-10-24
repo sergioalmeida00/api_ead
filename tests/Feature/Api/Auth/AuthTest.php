@@ -54,6 +54,8 @@ class AuthTest extends TestCase
         // Autentique o usuário
         $token = $this->createTokenUser();
 
+        ['user' => $user, 'token' => $token] = $this->createTokenUser();
+
         // Faça a solicitação de logout autenticada
         $response = $this->withHeader('Authorization', 'Bearer ' . $token)
             ->postJson('/logout');

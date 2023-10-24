@@ -17,12 +17,15 @@ trait UserFactoryTrait
 
         $token = $user->createToken('teste')->plainTextToken;
 
-        return $token;
+        return [
+            'user' => $user,
+            'token' => $token
+        ];
     }
 
     public function defaultHeaders()
     {
-        $token = $this->createTokenUser();
+        ['user' => $user, 'token' => $token] = $this->createTokenUser();
 
         return [
             'Authorization' => "Bearer {$token}",
