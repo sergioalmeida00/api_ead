@@ -48,12 +48,13 @@ class SupportTest extends TestCase
 
     public function test_get_supports()
     {
+        $totalSupports = Support::count();
         Support::factory()->count(50)->create();
 
         $response = $this->getJson('/supports', $this->defaultHeaders());
 
         $response->assertStatus(200);
-        $response->assertJsonCount(50, 'data');
+        $response->assertJsonCount( $totalSupports + 50, 'data');
     }
 
 

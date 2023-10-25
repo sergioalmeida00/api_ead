@@ -45,8 +45,6 @@ class LessonTest extends TestCase
 
     public function test_get_lessons_of_module_total()
     {
-        $totalLessons = Lesson::count();
-
         $module = Module::factory()->create();
 
         Lesson::factory()->count(10)->create([
@@ -56,7 +54,7 @@ class LessonTest extends TestCase
         $response = $this->getJson("/modules/{$module->id}/lessons", $this->defaultHeaders());
 
         $response->assertStatus(200);
-        $response->assertJsonCount($totalLessons + 10, 'data');
+        $response->assertJsonCount(10, 'data');
     }
 
     public function test_get_single_lesson_unauthenticated()

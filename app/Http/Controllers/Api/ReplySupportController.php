@@ -22,6 +22,6 @@ class ReplySupportController extends Controller
         // dd($request->validated());
         $support = $this->repository->createReplyToSupportId($request->validated());
 
-        return new ReplySupportResource($support);
+        return (new ReplySupportResource($support))->response()->setStatusCode(201);
     }
 }
