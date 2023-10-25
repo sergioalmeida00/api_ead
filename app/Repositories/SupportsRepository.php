@@ -45,6 +45,7 @@ class SupportsRepository
                     $query->where('description', 'ILIKE', "%{$filter}%");
                 }
             })
+            ->with('replies')
             ->orderBy('updated_at')
             ->get();
     }
@@ -76,6 +77,8 @@ class SupportsRepository
 
     private function getSupport($supportId)
     {
-        return $this->entity->findOrFail($supportId);
+        return $this->entity
+        ->with('replies')
+        ->findOrFail($supportId);
     }
 }
