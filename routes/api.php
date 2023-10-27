@@ -6,6 +6,7 @@ use App\Http\Controllers\Api\{
     ModuleController,
     ReplySupportController,
     SupportController,
+    UserController,
 };
 use App\Http\Controllers\Api\Auth\{
     AuthController,
@@ -19,6 +20,8 @@ Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth:sanc
 
 Route::post('/forgot-password', [ResetPasswordController::class, 'sendResetLink'])->middleware('guest');
 Route::post('/reset-password', [ResetPasswordController::class, 'resetPassword'])->middleware('guest');
+
+Route::post('/register', [UserController::class, 'register']);
 
 Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('/courses', [CourseController::class, 'index']);
