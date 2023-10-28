@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class RegisterUserRequest extends FormRequest
 {
@@ -23,10 +24,22 @@ class RegisterUserRequest extends FormRequest
      */
     public function rules()
     {
-        return [
-            'email' => ['required','email','unique:users'],
-            'name' => ['required','min:3','string'],
-            'password' => ['required','min:6','max:12']
-        ];
+        if ($this->isMethod('POS')) {
+            return [
+                'email' => ['required', 'email', 'unique:users'],
+                'name' => ['required', 'min:3', 'string'],
+                'password' => ['required', 'min:6', 'max:12']
+            ];
+        } else {
+            return [
+                'email' => [
+                    'required',
+                    'email',
+                    Rule::unique('users')->ignore(auth()->user()->id),
+                ],
+                'name' => ['required', 'min:3', 'string'],
+                'password' => ['min:6', 'max:12']
+            ];
+        }
     }
 }

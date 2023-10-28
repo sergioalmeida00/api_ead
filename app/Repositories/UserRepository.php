@@ -22,4 +22,25 @@ class UserRepository
             'password' => Hash::make($data['password'])
         ]);
     }
+
+    public function findOne($id)
+    {
+        return $this->entity->where('id', '=', $id)->firstOrFail();
+    }
+
+    public function updateUser($data, $id)
+    {
+        $updateData = [
+            'email' => $data['email'],
+            'name' => $data['name']
+        ];
+
+        if (isset($data['password'])) {
+            $updateData['password'] = $data['password'];
+        }
+
+        return $this->entity
+            ->where('id', '=', $id)
+            ->update($updateData);
+    }
 }
