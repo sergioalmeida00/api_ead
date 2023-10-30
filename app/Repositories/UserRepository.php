@@ -28,6 +28,15 @@ class UserRepository
         return $this->entity->where('id', '=', $id)->firstOrFail();
     }
 
+    public function findAll($userId)
+    {
+        return $this->entity->where(function ($query) use ($userId) {
+            if (!empty($userId)) {
+                return $query->where('id', '=', $userId)->first();
+            }
+        })->get();
+    }
+
     public function updateUser($data, $id)
     {
         $updateData = [

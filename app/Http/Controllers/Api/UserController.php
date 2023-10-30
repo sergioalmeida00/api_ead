@@ -31,6 +31,12 @@ class UserController extends Controller
         ]);
     }
 
+    public function listUsers($id = '')
+    {
+        $users = $this->repository->findAll($id);
+        return userResource::collection($users);
+    }
+
     public function update(RegisterUserRequest $request, $id)
     {
         $user = $this->repository->findOne($id);
@@ -47,6 +53,6 @@ class UserController extends Controller
 
         $this->repository->updateUser($data, $id);
 
-        return $this->success([],'',204);
+        return $this->success([], '', 204);
     }
 }
