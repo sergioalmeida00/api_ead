@@ -24,7 +24,7 @@ class RegisterUserRequest extends FormRequest
      */
     public function rules()
     {
-        if ($this->isMethod('POS')) {
+        if ($this->isMethod('POST')) {
             return [
                 'email' => ['required', 'email', 'unique:users'],
                 'name' => ['required', 'min:3', 'string'],
