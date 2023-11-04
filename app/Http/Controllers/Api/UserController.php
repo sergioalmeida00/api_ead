@@ -28,7 +28,7 @@ class UserController extends Controller
         return $this->success([
             'token' => $token,
             'user' => new userResource($user)
-        ]);
+        ],'',201);
     }
 
     public function listUsers($id = '')
