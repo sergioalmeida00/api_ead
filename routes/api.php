@@ -26,6 +26,9 @@ Route::post('/register', [UserController::class, 'register']);
 Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('/courses', [CourseController::class, 'index']);
     Route::get('/courses/{id}', [CourseController::class, 'show']);
+    Route::post('/courses', [CourseController::class, 'store']);
+    Route::put('/courses/{id}', [CourseController::class, 'update']);
+
 
     Route::get('/courses/{id}/modules', [ModuleController::class, 'index']);
 

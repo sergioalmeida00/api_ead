@@ -22,4 +22,16 @@ class CourseRepository
     {
         return $this->entity->with('modules.lessons')->findOrFail($identify);
     }
+
+    public function registerCourse($data)
+    {
+        return $this->entity->create($data);
+    }
+
+    public function updateCourse($data, $id)
+    {
+        return $this->entity
+            ->where('id', '=', $id)
+            ->update($data);
+    }
 }

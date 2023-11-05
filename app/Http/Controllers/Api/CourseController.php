@@ -3,12 +3,14 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\StoreOrUpdateCourse;
 use App\Http\Resources\CourseResource;
 use App\Repositories\CourseRepository;
-use Illuminate\Http\Request;
+use App\Http\Traits\ApiResponser as TraitsApiResponser;
 
 class CourseController extends Controller
 {
+    use TraitsApiResponser;
 
     protected $repositoryCourse;
 
@@ -25,5 +27,27 @@ class CourseController extends Controller
     public function show($id)
     {
         return new CourseResource($this->repositoryCourse->getCourseById($id));
+    }
+
+    public function store(StoreOrUpdateCourse $request)
+    {
+        $dataCourse = $request->validated();
+
+        return new CourseResource($this->repositoryCourse->registerCourse($dataCourse));
+    }
+
+    public function update(StoreOrUpdateCourse $request, $id)
+    {
+        $courseExist = $this->repositoryCourse->getCourseById($id);
+
+        if (!$courseExist) {
+            $this->error('Course is not Exist!', 404);
+        }
+
+        $dataCourse = $request->only(['name', 'description', 'image']);
+
+        $this->repositoryCourse->updateCourse($dataCourse, $id);
+
+        return $this->success(null,null,204);
     }
 }
