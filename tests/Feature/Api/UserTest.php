@@ -54,6 +54,12 @@ class UserTest extends TestCase
         $response->assertStatus(201);
     }
 
+    public function test_list_user_unauthenticated()
+    {
+        $response = $this->getJson('/user');
+        $response->assertStatus(401);
+    }
+
     public function test_list_user()
     {
         $totalUser = User::count();
@@ -66,5 +72,16 @@ class UserTest extends TestCase
 
         $response->assertStatus(200);
         $response->assertJsonCount($totalUser + 11, 'data');
+    }
+
+    public function test_list_userId()
+    {
+        ['user' => $user, 'token' => $token] = $this->createTokenUser();
+
+        $response = $this->getJson("/user/{$user->id}", [
+            'Authorization' => "Bearer {$token}"
+        ]);
+
+        $response->assertStatus(200);
     }
 }
