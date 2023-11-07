@@ -28,7 +28,8 @@ class LessonRepository
     {
         return  $this->entity
             ->with('supports.replies')
-            ->findOrFail($identify);
+            ->where('id', '=', $identify)
+            ->first();
     }
 
     public function markLessonViewed($lessonId)
@@ -50,5 +51,12 @@ class LessonRepository
     public function registerLesson($dataLesson)
     {
         return $this->entity->create($dataLesson);
+    }
+
+    public function updateLesson($dataLesson, $lessonId)
+    {
+        return $this->entity
+            ->where('id', '=', $lessonId)
+            ->update($dataLesson);
     }
 }

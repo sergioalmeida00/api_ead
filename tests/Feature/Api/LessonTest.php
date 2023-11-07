@@ -66,8 +66,7 @@ class LessonTest extends TestCase
 
     public function test_get_single_lesson_not_found()
     {
-        $response = $this->getJson('/lessons/b46fa5d2-a733-4801-aa4e-33e1ef22c7c1', $this->defaultHeaders());
-
+        $response = $this->getJson('/lessons/eeb36cb2-fb44-4d26-a1ed-c818251c07e2', $this->defaultHeaders());
         $response->assertStatus(404);
     }
 
@@ -82,5 +81,4 @@ class LessonTest extends TestCase
 
         $response->assertStatus(200);
     }
-
 }

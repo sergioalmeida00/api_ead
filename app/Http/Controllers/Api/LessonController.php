@@ -8,7 +8,6 @@ use App\Http\Requests\StoreViewed;
 use App\Http\Resources\LessonResource;
 use App\Http\Traits\ApiResponser;
 use App\Repositories\LessonRepository;
-use Illuminate\Http\Request;
 
 class LessonController extends Controller
 {
@@ -29,7 +28,13 @@ class LessonController extends Controller
 
     public function show($lessonId)
     {
-        return new LessonResource($this->repository->getLesson($lessonId));
+        $lesson = $this->repository->getLesson($lessonId);
+
+        if (!$lesson) {
+            return $this->error('Lesson is not Exist!', 404);
+        }
+
+        return new LessonResource($lesson);
     }
 
     public function viewed(StoreViewed $request)
@@ -42,5 +47,19 @@ class LessonController extends Controller
     {
         $dataLesson = $request->validated();
         return new LessonResource($this->repository->registerLesson($dataLesson));
+    }
+
+    public function update(StoreOrUpdateLesson $request, $id)
+    {
+        $lesson = $this->repository->getLesson($id);
+
+        if (!$lesson) {
+            return $this->error('Lesson is not Exist!', 404);
+        }
+
+        $dataLesson = $request->only(['name', 'description', 'video', 'module_id']);
+        $this->repository->updateLesson($dataLesson, $id);
+
+        return $this->success(null, null, 204);
     }
 }
