@@ -31,6 +31,8 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
 
     Route::get('/courses/{id}/modules', [ModuleController::class, 'index']);
+    Route::post('/modules', [ModuleController::class, 'store']);
+    Route::put('/modules/{id}', [ModuleController::class, 'update']);
 
     Route::get('/modules/{id}/lessons', [LessonController::class, 'index']);
     Route::get('/lessons/{id}', [LessonController::class, 'show']);
@@ -44,7 +46,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::post('/replies', [ReplySupportController::class, 'createReply']);
 
     Route::put('/user/{id}', [UserController::class, 'update']);
-    Route::get('/user/{id?}',[UserController::class, 'listUsers']);
+    Route::get('/user/{id?}', [UserController::class, 'listUsers']);
 });
 
 // Route::middleware('auth:sanctum')->get('/user', function (Request $request) {

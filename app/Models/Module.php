@@ -13,7 +13,7 @@ class Module extends Model
     public $incrementing = false;
     protected $keyType = 'uuid';
 
-    protected $fillable = ['name'];
+    protected $fillable = ['name','course_id'];
 
     public function course()
     {
