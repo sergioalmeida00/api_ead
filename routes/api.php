@@ -36,14 +36,15 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
     Route::get('/modules/{id}/lessons', [LessonController::class, 'index']);
     Route::get('/lessons/{id}', [LessonController::class, 'show']);
-    Route::post('/lessons',[LessonController::class, 'store']);
-    Route::put('/lessons/{id}',[LessonController::class, 'update']);
+    Route::post('/lessons', [LessonController::class, 'store']);
+    Route::put('/lessons/{id}', [LessonController::class, 'update']);
 
     Route::post('/lessons/viewed', [LessonController::class, 'viewed']);
 
     Route::get('/my-supports', [SupportController::class, 'mySupports']);
     Route::get('/supports', [SupportController::class, 'index']);
     Route::post('/supports', [SupportController::class, 'store']);
+    Route::put('/supports/{id}', [SupportController::class, 'update']);
 
     Route::post('/replies', [ReplySupportController::class, 'createReply']);
 

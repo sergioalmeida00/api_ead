@@ -13,7 +13,7 @@ class Lesson extends Model
     public $incrementing = false;
     protected $keyType = 'uuid';
 
-    protected $fillable = ['name', 'description', 'video','module_id'];
+    protected $fillable = ['name', 'description', 'video','module_id','lesson_id'];
 
 
     public function views()

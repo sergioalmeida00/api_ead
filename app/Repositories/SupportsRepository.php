@@ -44,6 +44,10 @@ class SupportsRepository
                     $filter = $filters['filter'];
                     $query->where('description', 'ILIKE', "%{$filter}%");
                 }
+
+                if (isset($filters['supportId'])) {
+                    $query->where('id', '=', $filters['supportId']);
+                }
             })
             ->with('replies')
             ->orderBy('updated_at')
@@ -78,7 +82,21 @@ class SupportsRepository
     private function getSupport($supportId)
     {
         return $this->entity
-        ->with('replies')
-        ->findOrFail($supportId);
+            ->with('replies')
+            ->findOrFail($supportId);
+    }
+
+    public function updateSupport($dataSupport, $id)
+    {
+        $user = $this->getUserAuth();
+
+        return $this->entity
+            ->where('id', '=', $id)
+            ->where('user_id', '=', $user->id)
+            ->update([
+                'lesson_id' => $dataSupport['lesson'],
+                'status' => $dataSupport['status'],
+                'description' => $dataSupport['description']
+            ]);
     }
 }
