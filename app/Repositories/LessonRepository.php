@@ -46,4 +46,9 @@ class LessonRepository
             'lesson_id' => $lessonId
         ]);
     }
+
+    public function registerLesson($dataLesson)
+    {
+        return $this->entity->create($dataLesson);
+    }
 }
