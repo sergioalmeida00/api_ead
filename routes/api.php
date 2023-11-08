@@ -50,6 +50,8 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
     Route::put('/user/{id}', [UserController::class, 'update']);
     Route::get('/user/{id?}', [UserController::class, 'listUsers']);
+
+    Route::get('/export-csv',[UserController::class, 'exportCSV']);
 });
 
 // Route::middleware('auth:sanctum')->get('/user', function (Request $request) {

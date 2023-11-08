@@ -8,11 +8,13 @@ use App\Http\Resources\userResource;
 use App\Repositories\UserRepository;
 use Illuminate\Http\Request;
 use App\Http\Traits\ApiResponser as TraitsApiResponser;
+use App\Http\Traits\ExportCsvTrait;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Response;
 
 class UserController extends Controller
 {
-    use TraitsApiResponser;
+    use TraitsApiResponser, ExportCsvTrait;
 
     protected $repository;
 
@@ -28,7 +30,7 @@ class UserController extends Controller
         return $this->success([
             'token' => $token,
             'user' => new userResource($user)
-        ],'',201);
+        ], '', 201);
     }
 
     public function listUsers($id = '')
@@ -54,5 +56,20 @@ class UserController extends Controller
         $this->repository->updateUser($data, $id);
 
         return $this->success([], '', 204);
+    }
+
+    public function exportCSV()
+    {
+        $users = $this->repository->findAll(null);
+        $columns = ['ID', 'NOME', 'EMAIL'];
+
+        $fileName = 'user.csv';
+
+        $this->exportData($fileName, $users, $columns);
+
+        return Response::download($fileName, $fileName, [
+            'Content-type' => 'text/csv',
+            'Content-Disposition' => "attachment; filename={$fileName}",
+        ]);
     }
 }
