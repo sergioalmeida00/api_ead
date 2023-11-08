@@ -2,19 +2,27 @@
 
 namespace App\Http\Traits;
 
-use SplFileObject;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 trait ExportCsvTrait
 {
     protected function exportData($fileName, $data, $columns)
     {
-        $file = new SplFileObject($fileName, 'w');
-        $file->fputcsv($columns);
+        $response = new StreamedResponse(
+            function () use ($data, $columns) {
+                $output = fopen('php://output', 'w');
+                fputcsv($output, $columns);
 
-        foreach ($data as $row) {
-            $file->fputcsv($row->toArray());
-        }
+                foreach ($data as $row) {
+                    fputcsv($output, $row->toArray());
+                }
+                fclose($output);
+            }
+        );
 
-        $file = null;
+        $response->headers->set('Content-Type', 'text/csv');
+        $response->headers->set('Content-Disposition', "attachment; filename={$fileName}");
+
+        return $response;
     }
 }

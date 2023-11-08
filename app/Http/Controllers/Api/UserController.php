@@ -6,11 +6,9 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\RegisterUserRequest;
 use App\Http\Resources\userResource;
 use App\Repositories\UserRepository;
-use Illuminate\Http\Request;
 use App\Http\Traits\ApiResponser as TraitsApiResponser;
 use App\Http\Traits\ExportCsvTrait;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Response;
 
 class UserController extends Controller
 {
@@ -65,11 +63,6 @@ class UserController extends Controller
 
         $fileName = 'user.csv';
 
-        $this->exportData($fileName, $users, $columns);
-
-        return Response::download($fileName, $fileName, [
-            'Content-type' => 'text/csv',
-            'Content-Disposition' => "attachment; filename={$fileName}",
-        ]);
+        return $this->exportData($fileName, $users, $columns);
     }
 }
