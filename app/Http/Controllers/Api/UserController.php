@@ -8,7 +8,9 @@ use App\Http\Resources\userResource;
 use App\Repositories\UserRepository;
 use App\Http\Traits\ApiResponser as TraitsApiResponser;
 use App\Http\Traits\ExportCsvTrait;
+use App\Mail\SendMail;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
 
 class UserController extends Controller
 {
@@ -63,6 +65,11 @@ class UserController extends Controller
 
         $fileName = 'user.csv';
 
-        return $this->exportData($fileName, $users, $columns);
+        $response = $this->exportData($users, $columns);
+
+        Mail::to('sergioalmeidaa00@gmail.com')->send(new SendMail($response));
+
+        return $response;
+
     }
 }
