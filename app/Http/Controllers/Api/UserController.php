@@ -9,18 +9,24 @@ use App\Repositories\UserRepository;
 use App\Http\Traits\ApiResponser as TraitsApiResponser;
 use App\Http\Traits\ExportCsvTrait;
 use App\Mail\SendMail;
+use App\Repositories\CourseRepository;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
+
+
 
 class UserController extends Controller
 {
     use TraitsApiResponser, ExportCsvTrait;
 
     protected $repository;
+    protected $repositoryCourse;
 
-    public function __construct(UserRepository $userRepository)
+    public function __construct(UserRepository $userRepository, CourseRepository $courseRepository)
     {
         $this->repository = $userRepository;
+        $this->repositoryCourse = $courseRepository;
     }
     public function register(RegisterUserRequest $request)
     {
@@ -70,6 +76,12 @@ class UserController extends Controller
         Mail::to('sergioalmeidaa00@gmail.com')->send(new SendMail($response));
 
         return $response;
+    }
 
+    public function generateCertificate()
+    {
+        $data = $this->repositoryCourse->getCourseWatchedLessonCount('365bc52f-dce5-4336-a3c2-8b4db4751102');
+        $pdf = Pdf::loadView('emails.user.certificate', ['data' => $data])->setPaper('a4', 'landscape');
+        return $pdf->download('certificate.pdf');
     }
 }

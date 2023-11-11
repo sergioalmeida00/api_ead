@@ -48,11 +48,14 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
     Route::post('/replies', [ReplySupportController::class, 'createReply']);
 
+
     Route::put('/user/{id}', [UserController::class, 'update']);
     Route::get('/user/{id?}', [UserController::class, 'listUsers']);
 
+
     Route::get('/export-csv', [UserController::class, 'exportCSV']);
 });
+Route::get('/generate-certificate', [UserController::class, 'generateCertificate']);
 
 // Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 //     return $request->user();
