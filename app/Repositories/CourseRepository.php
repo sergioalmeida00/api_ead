@@ -51,8 +51,7 @@ class CourseRepository
             ->leftJoin('lessons', 'modules.id', '=', 'lessons.module_id')
             ->leftJoin('views', function ($join) use ($user) {
                 $join->on('lessons.id', '=', 'views.lesson_id')
-                    // ->where('views.user_id', '=', $user->id);
-                    ->where('views.user_id', '=', '37f8b13e-8453-4af1-a00c-1a777352c98c');
+                    ->where('views.user_id', '=', $user->id);
             })
             ->leftJoin('users', 'views.user_id', '=', 'users.id')
             ->where('courses.id', '=', $courseId)

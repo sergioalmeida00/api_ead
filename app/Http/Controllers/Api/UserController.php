@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\GenerateCertificateRequest;
 use App\Http\Requests\RegisterUserRequest;
 use App\Http\Resources\userResource;
 use App\Repositories\UserRepository;
@@ -78,10 +79,14 @@ class UserController extends Controller
         return $response;
     }
 
-    public function generateCertificate()
+    public function generateCertificate(GenerateCertificateRequest $request)
     {
-        $data = $this->repositoryCourse->getCourseWatchedLessonCount('365bc52f-dce5-4336-a3c2-8b4db4751102');
-        $pdf = Pdf::loadView('emails.user.certificate', ['data' => $data])->setPaper('a4', 'landscape');
-        return $pdf->download('certificate.pdf');
+        $courseId = $request->validated();
+        $data = $this->repositoryCourse->getCourseWatchedLessonCount($courseId);
+
+        $pdf = Pdf::loadView('emails.user.certificate', ['data' => $data])
+            ->setPaper('a4', 'landscape');
+        return $pdf->stream('certificate.pdf');
+
     }
 }

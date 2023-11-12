@@ -54,8 +54,8 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
 
     Route::get('/export-csv', [UserController::class, 'exportCSV']);
+    Route::get('/generate-certificate', [UserController::class, 'generateCertificate']);
 });
-Route::get('/generate-certificate', [UserController::class, 'generateCertificate']);
 
 // Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 //     return $request->user();
