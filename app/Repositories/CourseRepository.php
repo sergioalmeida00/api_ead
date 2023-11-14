@@ -41,12 +41,10 @@ class CourseRepository
     {
         $user = $this->getUserAuth();
 
-        return $this->entity->select([
+        $response = $this->entity->select([
             'courses.id as course_id',
             'courses.name',
-            'users.name as user_name',
-            'users.email as email'
-            ])
+        ])
             ->leftJoin('modules', 'courses.id', '=', 'modules.course_id')
             ->leftJoin('lessons', 'modules.id', '=', 'lessons.module_id')
             ->leftJoin('views', function ($join) use ($user) {
@@ -54,11 +52,16 @@ class CourseRepository
                     ->where('views.user_id', '=', $user->id);
             })
             ->leftJoin('users', 'views.user_id', '=', 'users.id')
-            ->where('courses.id', '=', $courseId)
-            ->groupBy('courses.id', 'courses.name', 'users.name', 'users.email')
+            ->where('courses.id', '=', $courseId['courseId'])
+            ->groupBy('courses.id', 'courses.name')
             ->selectRaw('COUNT(DISTINCT lessons.id) as total_lessons')
             ->selectRaw('COUNT(DISTINCT views.lesson_id) as lessons_watched')
             ->first()
             ->toArray();
+
+        return [
+            'user' => $user,
+            'data' => $response
+        ];
     }
 }

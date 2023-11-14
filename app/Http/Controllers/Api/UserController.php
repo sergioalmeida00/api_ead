@@ -10,6 +10,7 @@ use App\Repositories\UserRepository;
 use App\Http\Traits\ApiResponser as TraitsApiResponser;
 use App\Http\Traits\ExportCsvTrait;
 use App\Mail\SendMail;
+use App\Mail\SendMailCertificate;
 use App\Repositories\CourseRepository;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\Hash;
@@ -84,9 +85,22 @@ class UserController extends Controller
         $courseId = $request->validated();
         $data = $this->repositoryCourse->getCourseWatchedLessonCount($courseId);
 
-        $pdf = Pdf::loadView('emails.user.certificate', ['data' => $data])
-            ->setPaper('a4', 'landscape');
-        return $pdf->stream('certificate.pdf');
 
+        if ($data['data']['total_lessons'] != $data['data']['lessons_watched']) {
+            return $this->error('Curso ainda não concluido', 404);
+        }
+
+        $pdf = Pdf::loadView('emails.user.certificate', [
+            'data' => $data['data'],
+            'user' => $data['user']->toArray()
+        ])
+            ->setPaper('a4', 'landscape');
+        $pdfPath = public_path('/temp/certificate.pdf');
+        $pdf->save($pdfPath);
+
+        Mail::to('sergioalmeidaa00@gmail.com')->send(new SendMailCertificate($data['user'], $pdfPath));
+
+        unlink($pdfPath);
+        return $pdf->stream('certificate.pdf');
     }
 }

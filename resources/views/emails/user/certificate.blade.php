@@ -115,12 +115,12 @@
                     <label class="">Certificado</label>
                 </div>
 
-                <div class="name">
-                    <label for=""> {{ $data['user_name'] }} </label>
-                </div>
+                {{-- <div class="name">
+                    <label for=""> {{ $user['name'] }} </label>
+                </div> --}}
 
                 <div class="complete_text">
-                    <span>Certificamos que <strong>{{ $data['user_name'] }}</strong> completou com sucesso a trilha de Node.JS no Ignite, tendo
+                    <span>Certificamos que <strong>{{ $user['name'] }}</strong> completou com sucesso a trilha de Node.JS no Ignite, tendo
                         conhecimento em API, Banco de Dados, AWS, Serverless, com
                         aproveitamento CURSO
                     </span>
