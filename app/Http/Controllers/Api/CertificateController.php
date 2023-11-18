@@ -8,10 +8,13 @@ use App\Mail\SendMailCertificate;
 use App\Repositories\CourseRepository;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\Mail;
+use App\Http\Traits\ApiResponser as TraitsApiResponser;
 
 class CertificateController extends Controller
 {
     protected $repository;
+    use TraitsApiResponser;
+
     public function __construct(CourseRepository $courseRepository)
     {
         $this->repository = $courseRepository;
@@ -20,8 +23,9 @@ class CertificateController extends Controller
     public function generateCertificate(GenerateCertificateRequest $request)
     {
         $courseId = $request->validated();
-        $data = $this->repository->getCourseWatchedLessonCount($courseId);
 
+        $data = $this->repository->getCourseWatchedLessonCount($courseId);
+        $userData = $data['user']->toArray();
 
         if ($data['data']['total_lessons'] != $data['data']['lessons_watched']) {
             return $this->error('Curso ainda não concluido', 404);
@@ -29,10 +33,11 @@ class CertificateController extends Controller
 
         $pdf = Pdf::loadView('emails.user.certificate', [
             'data' => $data['data'],
-            'user' => $data['user']->toArray()
+            'user' => $userData
         ])
             ->setPaper('a4', 'landscape');
-        $pdfPath = public_path('/temp/certificate.pdf');
+        $url = "/temp/" . $userData['id'] . ".pdf";
+        $pdfPath = public_path($url);
         $pdf->save($pdfPath);
 
         Mail::to('sergioalmeidaa00@gmail.com')->send(new SendMailCertificate($data['user'], $pdfPath));

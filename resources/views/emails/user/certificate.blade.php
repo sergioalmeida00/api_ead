@@ -75,7 +75,7 @@
             font-size: 20px;
             margin-left: 150px;
             text-align: center;
-            margin-top: 20px;
+            margin-top: 170px;
             max-width: 800px;
             /* text-align: left; */
             line-height: 25px;
@@ -107,22 +107,16 @@
 
         <div class="content">
             <div class="left">
-                <div class="title">
+                {{-- <div class="title">
                     <br />
                     <span> {{ $data['name'] }} </span>
-                </div>
+                </div> --}}
                 <div class="label">
                     <label class="">Certificado</label>
                 </div>
-
-                {{-- <div class="name">
-                    <label for=""> {{ $user['name'] }} </label>
-                </div> --}}
-
                 <div class="complete_text">
-                    <span>Certificamos que <strong>{{ $user['name'] }}</strong> completou com sucesso a trilha de Node.JS no Ignite, tendo
-                        conhecimento em API, Banco de Dados, AWS, Serverless, com
-                        aproveitamento CURSO
+                    <span>Certificamos que <strong>{{ $user['name'] }}</strong> demonstrou notável habilidade e
+                        competência ao concluir com êxito a trilha de <strong> {{ $data['name'] }} </strong>.
                     </span>
                 </div>
             </div>

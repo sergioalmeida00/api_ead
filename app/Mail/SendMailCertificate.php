@@ -19,11 +19,13 @@ class SendMailCertificate extends Mailable
 
     protected $userData;
     protected $certificate;
+    protected $baseFile;
 
     public function __construct($userData, $certificate)
     {
         $this->userData = $userData;
         $this->certificate = $certificate;
+        $this->baseFile = basename($this->certificate);
     }
 
     /**
@@ -34,10 +36,10 @@ class SendMailCertificate extends Mailable
     public function build()
     {
 
-        return $this->view('emails.user.listUser')
+        return $this->view('emails.user.listUser',['data' => $this->userData])
             ->subject('Certificado de Conclusão')
             ->attach($this->certificate, [
-                'as' => 'certificate.pdf',
+                'as' => $this->baseFile,
                 'mime' => 'application/pdf',
             ]);
     }
