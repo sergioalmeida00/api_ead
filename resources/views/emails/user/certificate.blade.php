@@ -115,7 +115,7 @@
                     <label class="">Certificado</label>
                 </div>
                 <div class="complete_text">
-                    <span>Certificamos que <strong>{{ $user['name'] }}</strong> demonstrou notável habilidade e
+                    <span>Certificamos que <strong>{{ $user->name }}</strong> demonstrou notável habilidade e
                         competência ao concluir com êxito a trilha de <strong> {{ $data['name'] }} </strong>.
                     </span>
                 </div>
@@ -125,12 +125,12 @@
                     <img src="{{ public_path('/img/assinatura.png') }}" alt="" />
                 </div>
                 <div class="date">
-                    <strong>Data de emissão:</strong> {{ now() }}
+                    <strong>Data de emissão:</strong> {{ $certificateDate }}
                     <br />
                 </div>
                 <div class="uuid">
-                    <span> ID </span>
-                    <strong>8f1fa56c-80dd-11ee-b962-0242ac120002</strong>
+                    <span> Credencial: </span>
+                    <strong> {{ $certificateId }} </strong>
                 </div>
             </div>
         </div>

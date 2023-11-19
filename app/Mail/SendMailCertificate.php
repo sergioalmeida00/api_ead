@@ -36,7 +36,7 @@ class SendMailCertificate extends Mailable
     public function build()
     {
 
-        return $this->view('emails.user.listUser',['data' => $this->userData])
+        return $this->view('emails.user.salutation',['user' => $this->userData])
             ->subject('Certificado de Conclusão')
             ->attach($this->certificate, [
                 'as' => $this->baseFile,

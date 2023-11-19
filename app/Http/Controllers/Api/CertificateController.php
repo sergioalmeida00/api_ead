@@ -9,15 +9,18 @@ use App\Repositories\CourseRepository;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\Mail;
 use App\Http\Traits\ApiResponser as TraitsApiResponser;
+use App\Repositories\CertificateRepository;
 
 class CertificateController extends Controller
 {
     protected $repository;
+    protected $repositoryCertificate;
     use TraitsApiResponser;
 
-    public function __construct(CourseRepository $courseRepository)
+    public function __construct(CourseRepository $courseRepository, CertificateRepository $repositoryCertificate)
     {
         $this->repository = $courseRepository;
+        $this->repositoryCertificate = $repositoryCertificate;
     }
 
     public function generateCertificate(GenerateCertificateRequest $request)
@@ -25,24 +28,66 @@ class CertificateController extends Controller
         $courseId = $request->validated();
 
         $data = $this->repository->getCourseWatchedLessonCount($courseId);
-        $userData = $data['user']->toArray();
+        $userData = $data['user'];
 
-        if ($data['data']['total_lessons'] != $data['data']['lessons_watched']) {
-            return $this->error('Curso ainda não concluido', 404);
+        if ($this->courseNotCompleted($data['data'])) {
+            return $this->error('Curso ainda não concluido', 400);
         }
 
+        if ($this->certificateExists($userData->id, $courseId)) {
+            return $this->error('Certificado já existe para este usuário e curso', 400);
+        }
+
+        $certificateId = $this->createCertificate($userData->id, $courseId['courseId']);
+
+        $pdfPath = $this->generateCertificatePdf(
+            $data['data'],
+            $userData,
+            $certificateId
+        );
+
+        try {
+            Mail::to('sergioalmeidaa00@gmail.com')->send(new SendMailCertificate($userData, $pdfPath));
+            return $this->success([], 'Enviado com sucesso.', 201);
+        } catch (\Exception $e) {
+            return $this->error('Erro ao enviar o certificado por email', 500);
+        } finally {
+            unlink($pdfPath);
+        }
+    }
+
+    protected function courseNotCompleted($courseData)
+    {
+        return $courseData['total_lessons'] != $courseData['lessons_watched'];
+    }
+
+    protected function certificateExists($userId, $courseId)
+    {
+        return $this->repositoryCertificate->findCertificate($userId, $courseId);
+    }
+
+    protected function createCertificate($userId, $courseId)
+    {
+        return $this->repositoryCertificate->create([
+            'user_id' => $userId,
+            'course_id' => $courseId
+        ]);
+    }
+
+    protected function generateCertificatePdf($courseData, $userData, $certificateDate)
+    {
         $pdf = Pdf::loadView('emails.user.certificate', [
-            'data' => $data['data'],
-            'user' => $userData
+            'data' => $courseData,
+            'user' => $userData,
+            'certificateId' => $certificateDate->id->toString(),
+            'certificateDate' => $certificateDate->created_at
         ])
             ->setPaper('a4', 'landscape');
-        $url = "/temp/" . $userData['id'] . ".pdf";
-        $pdfPath = public_path($url);
+
+        $pdfPath = public_path("/temp/{$userData->id}.pdf");
+
         $pdf->save($pdfPath);
 
-        Mail::to('sergioalmeidaa00@gmail.com')->send(new SendMailCertificate($data['user'], $pdfPath));
-
-        unlink($pdfPath);
-        return $pdf->stream('certificate.pdf');
+        return $pdfPath;
     }
 }

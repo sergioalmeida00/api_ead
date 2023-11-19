@@ -42,7 +42,7 @@
 <body>
     <div class="container">
         <h1>Certificado de Conclusão</h1>
-        <p>Olá, <strong>{{ $data['name'] }}</strong>,</p>
+        <p>Olá, <strong>{{ $user->name }}</strong>,</p>
         <p>
             Seu desempenho exemplar e dedicação ao aprendizado são evidentes, refletindo-se em um aproveitamento
             excepcional durante todo o curso. Estamos confiantes de que as habilidades adquiridas serão valiosas em sua
