@@ -26,7 +26,7 @@ class StoreOrUpdateCourse extends FormRequest
         return [
             'name' =>  ['required', 'min:5'],
             'description' => ['required', 'min:5'],
-            'image' => ['string']
+            'image' => ['nullable','image', 'mimes:jpg,png,jpeg,gif,svg', 'max:2048']
         ];
     }
 }

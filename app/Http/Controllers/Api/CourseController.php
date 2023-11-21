@@ -7,10 +7,11 @@ use App\Http\Requests\StoreOrUpdateCourse;
 use App\Http\Resources\CourseResource;
 use App\Repositories\CourseRepository;
 use App\Http\Traits\ApiResponser as TraitsApiResponser;
+use App\Http\Traits\UploadFileTrait;
 
 class CourseController extends Controller
 {
-    use TraitsApiResponser;
+    use TraitsApiResponser, UploadFileTrait;
 
     protected $repositoryCourse;
 
@@ -33,6 +34,11 @@ class CourseController extends Controller
     {
         $dataCourse = $request->validated();
 
+        if (isset($dataCourse['image'])) {
+            $path = $this->uploadStore($request->image, 'course');
+            $dataCourse['image'] = $path;
+        }
+
         return new CourseResource($this->repositoryCourse->registerCourse($dataCourse));
     }
 
@@ -48,6 +54,6 @@ class CourseController extends Controller
 
         $this->repositoryCourse->updateCourse($dataCourse, $id);
 
-        return $this->success(null,null,204);
+        return $this->success(null, null, 204);
     }
 }
