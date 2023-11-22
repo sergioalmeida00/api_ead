@@ -44,13 +44,19 @@ class CourseController extends Controller
 
     public function update(StoreOrUpdateCourse $request, $id)
     {
+        $dataCourse = $request->only(['name', 'description', 'image']);
         $courseExist = $this->repositoryCourse->getCourseById($id);
 
         if (!$courseExist) {
             $this->error('Course is not Exist!', 404);
         }
 
-        $dataCourse = $request->only(['name', 'description', 'image']);
+        if (isset($dataCourse['image'])) {
+            $this->uploadRemove($courseExist->image);
+        }
+
+        $path = $this->uploadStore($dataCourse['image'], 'course');
+        $dataCourse['image'] = $path;
 
         $this->repositoryCourse->updateCourse($dataCourse, $id);
 
