@@ -53,10 +53,9 @@ class CourseController extends Controller
 
         if (isset($dataCourse['image'])) {
             $this->uploadRemove($courseExist->image);
+            $path = $this->uploadStore($dataCourse['image'], 'course');
+            $dataCourse['image'] = $path;
         }
-
-        $path = $this->uploadStore($dataCourse['image'], 'course');
-        $dataCourse['image'] = $path;
 
         $this->repositoryCourse->updateCourse($dataCourse, $id);
 
