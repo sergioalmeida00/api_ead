@@ -7,11 +7,12 @@ use App\Http\Requests\StoreOrUpdateLesson;
 use App\Http\Requests\StoreViewed;
 use App\Http\Resources\LessonResource;
 use App\Http\Traits\ApiResponser;
+use App\Http\Traits\UploadFileTrait;
 use App\Repositories\LessonRepository;
 
 class LessonController extends Controller
 {
-    use ApiResponser;
+    use ApiResponser, UploadFileTrait;
     protected $repository;
 
     public function __construct(LessonRepository $lessonRepository)
@@ -46,6 +47,12 @@ class LessonController extends Controller
     public function store(StoreOrUpdateLesson $request)
     {
         $dataLesson = $request->validated();
+
+        if (isset($dataLesson['video'])) {
+            $path = $this->uploadStore($request->video, 'lesson');
+            $dataLesson['video'] = $path;
+        }
+
         return new LessonResource($this->repository->registerLesson($dataLesson));
     }
 

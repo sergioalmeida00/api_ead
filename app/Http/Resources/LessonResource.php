@@ -3,6 +3,7 @@
 namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Facades\Storage;
 
 class LessonResource extends JsonResource
 {
@@ -19,7 +20,7 @@ class LessonResource extends JsonResource
             'name' => ucwords(strtolower($this->name)),
             'description' => $this->description,
             'video' => $this->video,
-            'views' => $this->views
+            'views' => $this->views ? Storage::url($this->video) : ''
         ];
     }
 }

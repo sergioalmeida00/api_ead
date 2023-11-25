@@ -24,10 +24,10 @@ class StoreOrUpdateLesson extends FormRequest
     public function rules()
     {
         return [
-            'module_id' => ['required','exists:modules,id'],
+            'module_id' => ['required', 'exists:modules,id'],
             'name' =>  ['required', 'min:5'],
             'description' => ['required', 'min:5'],
-            'video' => ['required', 'string'],
+            'video' => ['required', 'file', 'mimetypes:video/mp4'],
         ];
     }
 }
