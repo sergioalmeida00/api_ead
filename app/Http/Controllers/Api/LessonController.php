@@ -58,13 +58,20 @@ class LessonController extends Controller
 
     public function update(StoreOrUpdateLesson $request, $id)
     {
+        $dataLesson = $request->only(['name', 'description', 'video', 'module_id']);
+
         $lesson = $this->repository->getLesson($id);
 
         if (!$lesson) {
             return $this->error('Lesson is not Exist!', 404);
         }
 
-        $dataLesson = $request->only(['name', 'description', 'video', 'module_id']);
+        if (isset($dataLesson['video'])) {
+            $this->uploadRemove($lesson->video);
+            $path = $this->uploadStore($dataLesson['video'], 'lesson');
+            $dataLesson['video'] = $path;
+        }
+
         $this->repository->updateLesson($dataLesson, $id);
 
         return $this->success(null, null, 204);
