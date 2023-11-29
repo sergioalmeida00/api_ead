@@ -4,12 +4,14 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\GenerateCertificateRequest;
+use App\Http\Requests\ValidatedCertificateRequest;
 use App\Mail\SendMailCertificate;
 use App\Repositories\CourseRepository;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\Mail;
 use App\Http\Traits\ApiResponser as TraitsApiResponser;
 use App\Repositories\CertificateRepository;
+use Illuminate\Http\Request;
 
 class CertificateController extends Controller
 {
@@ -54,6 +56,18 @@ class CertificateController extends Controller
         } finally {
             unlink($pdfPath);
         }
+    }
+
+    public function validatedCertificate(ValidatedCertificateRequest $request,$id)
+    {
+        $idCertificate = $request->id;
+        $certificateIsValid = $this->repositoryCertificate->validatedCertificate($idCertificate);
+
+        if (!$certificateIsValid) {
+            return $this->error('Certificado Invalido', 400);
+        }
+
+        return $this->success([], 'Certificado Valido', 200);
     }
 
     protected function courseNotCompleted($courseData)

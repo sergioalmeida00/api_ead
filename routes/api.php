@@ -13,6 +13,7 @@ use App\Http\Controllers\Api\Auth\{
     AuthController,
     ResetPasswordController
 };
+use App\Http\Requests\ValidatedCertificateRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -23,6 +24,8 @@ Route::post('/forgot-password', [ResetPasswordController::class, 'sendResetLink'
 Route::post('/reset-password', [ResetPasswordController::class, 'resetPassword'])->middleware('guest');
 
 Route::post('/register', [UserController::class, 'register']);
+
+Route::get('/validated-certificate/{id}', [CertificateController::class, 'validatedCertificate']);
 
 Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('/courses', [CourseController::class, 'index']);

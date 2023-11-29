@@ -25,4 +25,11 @@ class CertificateRepository
             ->where('course_id', '=', $courseId)
             ->first();
     }
+
+    public function validatedCertificate($idCertificate)
+    {
+        return $this->entity
+            ->where('id', '=', $idCertificate)
+            ->first();
+    }
 }
